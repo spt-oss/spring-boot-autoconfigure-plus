@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.github.spt-oss</groupId>
+		<artifactId>spt-oss-parent</artifactId>
+		<version>8.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>spring-boot-parent</artifactId>
+	<version>2.1.5.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Spring Boot Plus</name>
+	<description>Custom implementation for Spring Boot</description>
+	<url>https://github.com/spt-oss/spring-boot-plus</url>
+	<inceptionYear>2017</inceptionYear>
+
+	<modules>
+		<module>spring-boot-autoconfigure</module>
+	</modules>
+
+	<scm>
+		<url>https://github.com/spt-oss/spring-boot-plus/tree/master</url>
+		<connection>scm:git:git@github.com:spt-oss/spring-boot-plus.git</connection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<properties>
+		<claudb.version>1.5.1</claudb.version>
+		<flyway-plus.version>5.2.4.0</flyway-plus.version>
+		<spring-boot.version>2.1.5.RELEASE</spring-boot.version>
+		<spring-boot-plus.version>2.1.5.0-SNAPSHOT</spring-boot-plus.version>
+		<spt-checkstyle.version>8.21.0-SNAPSHOT</spt-checkstyle.version>
+		<thymeleaf-extras.version>3.0.11.0</thymeleaf-extras.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.github.tonivade</groupId>
+				<artifactId>claudb</artifactId>
+				<version>${claudb.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.spt-oss</groupId>
+				<artifactId>flyway-core</artifactId>
+				<version>${flyway-plus.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.github.spt-oss</groupId>
+				<artifactId>spring-boot-autoconfigure</artifactId>
+				<version>${spring-boot-plus.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.spt-oss</groupId>
+				<artifactId>thymeleaf-extras-minify</artifactId>
+				<version>${thymeleaf-extras.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+		<repository>
+			<id>sonatype</id>
+			<url>https://oss.sonatype.org/content/groups/staging</url>
+		</repository>
+	</repositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<configLocation>spt/checkstyle/checks.xml</configLocation>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.github.spt-oss</groupId>
+						<artifactId>spt-checkstyle</artifactId>
+						<version>${spt-checkstyle.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>gpg</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>
