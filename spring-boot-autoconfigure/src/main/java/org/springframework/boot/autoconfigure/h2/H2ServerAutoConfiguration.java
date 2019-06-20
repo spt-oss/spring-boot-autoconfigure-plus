@@ -55,10 +55,9 @@ public class H2ServerAutoConfiguration {
 	 * {@link Bean}: {@link Server}
 	 * 
 	 * @return {@link Server}
-	 * @throws IllegalStateException if failed to start
 	 */
 	@Bean(initMethod = "start", destroyMethod = "stop")
-	public Server h2Server() throws IllegalStateException {
+	public Server h2Server() {
 		
 		try {
 			

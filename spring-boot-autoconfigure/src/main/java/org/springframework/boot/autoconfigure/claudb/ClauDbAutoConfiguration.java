@@ -65,14 +65,15 @@ public class ClauDbAutoConfiguration {
 	 */
 	@Configuration
 	@ConditionalOnClass(RedisConnectionFactory.class)
-	public static class DataSourceDependsOnBeanFactoryPostProcessor extends AbstractDependsOnBeanFactoryPostProcessor {
+	public static class RedisConnectionFactoryDependsOnBeanFactoryPostProcessor
+		extends AbstractDependsOnBeanFactoryPostProcessor {
 		
 		/**
 		 * Constructor
 		 */
-		public DataSourceDependsOnBeanFactoryPostProcessor() {
+		public RedisConnectionFactoryDependsOnBeanFactoryPostProcessor() {
 			
-			super(RedisConnectionFactory.class, "clauDbServer");
+			super(RedisConnectionFactory.class, "respServer");
 		}
 	}
 }

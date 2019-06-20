@@ -17,7 +17,6 @@
 package org.springframework.boot.autoconfigure.h2;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,9 +90,8 @@ public class H2ServerProperties {
 	 * Determine port
 	 * 
 	 * @return port
-	 * @throws IllegalStateException if failed to determine
 	 */
-	protected int determinePort() throws IllegalStateException {
+	protected int determinePort() {
 		
 		if (this.port != 0) {
 			
@@ -107,9 +105,8 @@ public class H2ServerProperties {
 	 * Determine base directory
 	 * 
 	 * @return base directory
-	 * @throws UncheckedIOException if failed to determine
 	 */
-	protected String determineBaseDir() throws UncheckedIOException {
+	protected String determineBaseDir() {
 		
 		if (StringUtils.hasText(this.baseDir)) {
 			
@@ -122,7 +119,7 @@ public class H2ServerProperties {
 		}
 		catch (IOException e) {
 			
-			throw new UncheckedIOException("Failed to determine base directory", e);
+			throw new IllegalStateException("Failed to determine base directory", e);
 		}
 	}
 }

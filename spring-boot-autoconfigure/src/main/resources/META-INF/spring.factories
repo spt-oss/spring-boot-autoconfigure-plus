@@ -2,4 +2,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.springframework.boot.autoconfigure.claudb.ClauDbAutoConfiguration,\
 org.springframework.boot.autoconfigure.flyway.CustomFlywayAutoConfiguration,\
 org.springframework.boot.autoconfigure.h2.H2ServerAutoConfiguration,\
+org.springframework.boot.autoconfigure.jdbc.CustomDataSourceAutoConfiguration,\
+org.springframework.boot.autoconfigure.orm.jpa.CustomHibernateJpaAutoConfiguration,\
 org.springframework.boot.autoconfigure.thymeleaf.CustomThymeleafAutoConfiguration

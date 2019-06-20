@@ -42,9 +42,8 @@ public class ClauDbProperties {
 	 * Determine port
 	 * 
 	 * @return port
-	 * @throws IllegalStateException if failed to determine
 	 */
-	public int determinePort() throws IllegalStateException {
+	public int determinePort() {
 		
 		if (this.port != 0) {
 			

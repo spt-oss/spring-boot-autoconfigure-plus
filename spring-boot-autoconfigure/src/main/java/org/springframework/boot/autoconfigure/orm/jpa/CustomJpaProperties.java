@@ -14,26 +14,30 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.autoconfigure.flyway;
+package org.springframework.boot.autoconfigure.orm.jpa;
 
-import org.flywaydb.core.CustomFlyway;
-import org.flywaydb.core.Flyway;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * {@link FlywayMigrationStrategy}: {@link CustomFlyway}
+ * Custom {@link JpaProperties}
  */
-public interface CustomFlywayMigrationStrategy extends FlywayMigrationStrategy {
-	
-	@Override
-	default void migrate(Flyway flyway) {
-		
-		migrate((CustomFlyway) flyway);
-	}
+@ConfigurationProperties(CustomJpaProperties.PREFIX)
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class CustomJpaProperties extends JpaProperties {
 	
 	/**
-	 * Migrate
-	 * 
-	 * @param flyway {@link CustomFlyway}
+	 * Prefix
 	 */
-	void migrate(CustomFlyway flyway);
+	public static final String PREFIX = "spring.jpa";
+	
+	/**
+	 * Persistence unit name
+	 */
+	private String persistenceUnitName;
 }
