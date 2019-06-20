@@ -21,20 +21,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -59,75 +54,11 @@ public class CustomDataSourceProperties extends DataSourceProperties {
 	private Map<String, Map<String, Object>> parameter = new LinkedHashMap<>();
 	
 	@Override
-	public String determineDriverClassName() {
-		
-		return Optional.ofNullable(this.getUrl())
-		/* @formatter:off */
-			.filter(StringUtils::hasText)
-			.map(CustomDatabaseDriver::fromJdbcUrl)
-			.map(CustomDatabaseDriver::getDriverClassName)
-			.filter(StringUtils::hasText)
-			.orElseGet(() -> super.determineDriverClassName());
-			/* @formatter:on */
-	}
-	
-	@Override
 	public String determineUrl() {
 		
 		String url = super.determineUrl();
 		
 		return JdbcUrlParams.merge(url, this.parameter.get(DatabaseDriver.fromJdbcUrl(url).getId()));
-	}
-	
-	/**
-	 * Custom {@link DatabaseDriver}
-	 */
-	@AllArgsConstructor
-	protected enum CustomDatabaseDriver {
-		
-		/**
-		 * Unknown
-		 */
-		UNKNOWN(null, null),
-		
-		/**
-		 * MySQL replication
-		 */
-		MYSQL_REPLICATION("jdbc:mysql:replication", "com.mysql.jdbc.ReplicationDriver");
-		
-		/**
-		 * JDBC URL prefix
-		 */
-		@Getter(AccessLevel.PROTECTED)
-		private String jdbcUrlPrefix;
-		
-		/**
-		 * Driver class name
-		 */
-		@Getter
-		private String driverClassName;
-		
-		/**
-		 * {@link DatabaseDriver#fromJdbcUrl(String)}
-		 * 
-		 * @param url JDBC URL
-		 * @return {@link CustomDatabaseDriver} or {@code null}
-		 */
-		public static CustomDatabaseDriver fromJdbcUrl(String url) {
-			
-			if (StringUtils.hasText(url)) {
-				
-				for (CustomDatabaseDriver driver : values()) {
-					
-					if (driver != UNKNOWN && url.startsWith(String.format("%s:", driver.getJdbcUrlPrefix()))) {
-						
-						return driver;
-					}
-				}
-			}
-			
-			return UNKNOWN;
-		}
 	}
 	
 	/**

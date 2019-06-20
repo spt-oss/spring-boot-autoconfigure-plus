@@ -17,16 +17,16 @@
 package org.springframework.boot.autoconfigure.flyway;
 
 import org.flywaydb.core.CustomFlyway;
+import org.flywaydb.core.Flyway;
 import org.flywaydb.core.internal.placeholder.MysqlH2SqlReplacer;
 
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
- * {@link CustomFlywayMigrationStrategy}: MySQL-H2
+ * {@link FlywayMigrationStrategy}: MySQL-H2
  */
-public class MysqlH2FlywayMigrationStrategy implements CustomFlywayMigrationStrategy {
+public class MysqlH2FlywayMigrationStrategy implements FlywayMigrationStrategy {
 	
 	/**
 	 * Clean
@@ -36,9 +36,9 @@ public class MysqlH2FlywayMigrationStrategy implements CustomFlywayMigrationStra
 	private boolean clean;
 	
 	@Override
-	public void migrate(@NonNull CustomFlyway flyway) {
+	public void migrate(Flyway source) {
 		
-		flyway.setPlaceholderReplacer(new MysqlH2SqlReplacer());
+		CustomFlyway flyway = new CustomFlyway(source, new MysqlH2SqlReplacer());
 		
 		if (this.clean) {
 			

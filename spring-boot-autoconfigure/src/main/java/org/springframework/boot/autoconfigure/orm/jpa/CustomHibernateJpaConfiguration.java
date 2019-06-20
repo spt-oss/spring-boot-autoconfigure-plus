@@ -17,7 +17,6 @@
 package org.springframework.boot.autoconfigure.orm.jpa;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -27,6 +26,7 @@ import org.hibernate.boot.model.naming.PhysicalNamingStrategy; // TODO @checksty
 import org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl; // TODO @checkstyle:ignore
 import org.hibernate.jpa.boot.spi.IntegratorProvider; // TODO @checkstyle:ignore
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizers;
 import org.springframework.boot.jdbc.SchemaManagementProvider;
 import org.springframework.boot.jdbc.metadata.DataSourcePoolMetadataProvider;
@@ -50,52 +50,58 @@ public class CustomHibernateJpaConfiguration extends HibernateJpaConfiguration {
 	/**
 	 * {@link CustomJpaProperties}
 	 */
-	private CustomJpaProperties properties;
+	private final CustomJpaProperties properties;
 	
 	/**
 	 * {@link IntegratorProvider}
 	 */
-	private IntegratorProvider integratorProvider;
+	private final IntegratorProvider integratorProvider;
 	
 	/**
 	 * Constructor
 	 * 
 	 * @param dataSource {@link DataSource}
 	 * @param properties {@link CustomJpaProperties}
+	 * @param beanFactory {@link ConfigurableListableBeanFactory}
 	 * @param jtaTransactionManager {@link JtaTransactionManager}
 	 * @param transactionManagerCustomizers {@link TransactionManagerCustomizers}
+	 * @param hibernateProperties {@link HibernateProperties}
 	 * @param metadataProviders {@link DataSourcePoolMetadataProvider}
-	 * @param schemaManagementProviders {@link SchemaManagementProvider}
+	 * @param schemaManagementProvider {@link SchemaManagementProvider}
 	 * @param physicalNamingStrategy {@link PhysicalNamingStrategy}
 	 * @param implicitNamingStrategy {@link ImplicitNamingStrategy}
+	 * @param hibernatePropertiesCustomizer {@link HibernatePropertiesCustomizer}
 	 * @param integratorProvider {@link IntegratorProvider}
-	 * @param hibernatePropertiesCustomizers {@link HibernatePropertiesCustomizer}
 	 */
 	public CustomHibernateJpaConfiguration(
 	/* @formatter:off */
 		DataSource dataSource,
 		@NonNull CustomJpaProperties properties,
+		ConfigurableListableBeanFactory beanFactory,
 		ObjectProvider<JtaTransactionManager> jtaTransactionManager,
 		ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers,
+		HibernateProperties hibernateProperties,
 		ObjectProvider<Collection<DataSourcePoolMetadataProvider>> metadataProviders,
-		ObjectProvider<List<SchemaManagementProvider>> schemaManagementProviders,
+		ObjectProvider<SchemaManagementProvider> schemaManagementProvider,
 		ObjectProvider<PhysicalNamingStrategy> physicalNamingStrategy,
 		ObjectProvider<ImplicitNamingStrategy> implicitNamingStrategy,
-		@NonNull ObjectProvider<IntegratorProvider> integratorProvider,
-		ObjectProvider<List<HibernatePropertiesCustomizer>> hibernatePropertiesCustomizers) {
+		ObjectProvider<HibernatePropertiesCustomizer> hibernatePropertiesCustomizer,
+		@NonNull ObjectProvider<IntegratorProvider> integratorProvider) {
 		/* @formatter:on */
 		
 		super(
 		/* @formatter:off */
 			dataSource,
 			properties,
+			beanFactory,
 			jtaTransactionManager,
 			transactionManagerCustomizers,
+			hibernateProperties,
 			metadataProviders,
-			schemaManagementProviders,
+			schemaManagementProvider,
 			physicalNamingStrategy,
 			implicitNamingStrategy,
-			hibernatePropertiesCustomizers
+			hibernatePropertiesCustomizer
 			/* @formatter:on */
 		);
 		

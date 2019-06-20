@@ -24,34 +24,33 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.flywaydb.core.CustomFlyway;
-import org.flywaydb.core.internal.placeholder.MysqlH2SqlReplacer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.flyway.CustomFlywayAutoConfigurationTests.InternalMigrationConfiguration;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration.FlywayConfiguration;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfigurationTests.MigrationConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.NonNull;
+
 /**
- * {@link Test}: {@link CustomFlywayAutoConfiguration}
+ * {@link Test}: {@link FlywayAutoConfiguration}
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
 	/* @formatter:off */
 	DataSourceAutoConfiguration.class,
-	CustomFlywayAutoConfiguration.class,
-	InternalMigrationConfiguration.class
+	FlywayAutoConfiguration.class,
+	MigrationConfiguration.class
 	/* @formatter:on */
 })
 @ActiveProfiles({ "test", "test-flyway" })
-public class CustomFlywayAutoConfigurationTests {
+public class FlywayAutoConfigurationTests {
 	
 	/**
 	 * Schema: foo
@@ -64,43 +63,16 @@ public class CustomFlywayAutoConfigurationTests {
 	private static final String SCHEMA_BAR = "bar";
 	
 	/**
-	 * {@link CustomFlyway}
-	 */
-	@Autowired
-	private CustomFlyway flyway;
-	
-	/**
 	 * {@link DataSource}
 	 */
 	@Autowired
 	private DataSource dataSource;
 	
 	/**
-	 * Annotation
-	 */
-	@Test
-	public void annotation() {
-		
-		ConditionalOnProperty property = AnnotationUtils.findAnnotation(CustomFlywayAutoConfiguration.class,
-			ConditionalOnProperty.class);
-		
-		assertThat(property).isNotNull();
-		assertThat(property.prefix()).isEqualTo(CustomFlywayProperties.PREFIX);
-		assertThat(property.name()).isEqualTo(new String[] { "enabled" });
-		assertThat(property.havingValue()).isEqualTo("");
-		assertThat(property.matchIfMissing()).isEqualTo(true);
-	}
-	
-	/**
-	 * {@link org.springframework.boot.autoconfigure.flyway.CustomFlywayAutoConfiguration.CustomFlywayConfiguration#flyway()}
+	 * {@link FlywayConfiguration#flyway()}
 	 */
 	@Test
 	public void flyway() {
-		
-		assertThat(this.hasData(SCHEMA_FOO)).isEqualTo(false);
-		assertThat(this.hasData(SCHEMA_BAR)).isEqualTo(false);
-		
-		this.flyway.migrate();
 		
 		assertThat(this.hasData(SCHEMA_FOO)).isEqualTo(true);
 		assertThat(this.hasData(SCHEMA_BAR)).isEqualTo(true);
@@ -112,11 +84,13 @@ public class CustomFlywayAutoConfigurationTests {
 	 * @param name name
 	 * @return {@code true} if has data
 	 */
-	private boolean hasData(String name) {
+	private boolean hasData(@NonNull String name) {
 		
 		try (Connection connection = this.dataSource.getConnection()) {
 			
-			try (ResultSet result = connection.prepareCall("select * from " + name + "." + name).executeQuery()) {
+			String sql = String.format("select * from %s.%s", name, name);
+			
+			try (ResultSet result = connection.prepareCall(sql).executeQuery()) {
 				
 				return result.next() && result.getString("code").equals(name);
 			}
@@ -134,20 +108,20 @@ public class CustomFlywayAutoConfigurationTests {
 	}
 	
 	/**
-	 * {@link Configuration}: Internal migration
+	 * {@link Configuration}: Migration
 	 */
 	@Configuration
-	protected static class InternalMigrationConfiguration {
+	protected static class MigrationConfiguration {
 		
 		/**
-		 * {@link Bean}: {@link CustomFlywayMigrationStrategy}
+		 * {@link Bean}: {@link FlywayMigrationStrategy}
 		 * 
-		 * @return {@link CustomFlywayMigrationStrategy}
+		 * @return {@link FlywayMigrationStrategy}
 		 */
 		@Bean
-		public CustomFlywayMigrationStrategy migrationStrategy() {
+		public FlywayMigrationStrategy migrationStrategy() {
 			
-			return flyway -> flyway.setPlaceholderReplacer(new MysqlH2SqlReplacer());
+			return new MysqlH2FlywayMigrationStrategy();
 		}
 	}
 }
