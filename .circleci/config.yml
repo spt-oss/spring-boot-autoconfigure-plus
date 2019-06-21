@@ -19,7 +19,7 @@ jobs:
             - run: |
                 mvn-settings sonatype ${MAVEN_USERNAME} ${MAVEN_PASSWORD}
             - run: |
-                mvn-go-offline
+                mvn-go-offline -X
             - save_cache:
                 paths:
                     - ~/.m2
