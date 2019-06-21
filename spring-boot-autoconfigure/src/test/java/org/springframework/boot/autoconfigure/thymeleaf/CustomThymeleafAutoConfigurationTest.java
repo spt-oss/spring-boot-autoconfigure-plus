@@ -34,7 +34,7 @@ import org.thymeleaf.extras.minify.engine.SimpleMinifierTemplateHandler;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CustomThymeleafAutoConfiguration.class)
 @ActiveProfiles({ "test", "test-thymeleaf" })
-public class CustomThymeleafAutoConfigurationTests {
+public class CustomThymeleafAutoConfigurationTest {
 	
 	/**
 	 * {@link MinifierDialect}

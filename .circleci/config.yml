@@ -3,7 +3,7 @@ version: 2
 settings: &settings
     working_directory: ~/spring-boot-plus
     docker:
-        - image: circleci/openjdk:11.0.3-jdk-stretch
+        - image: circleci/openjdk:9.0.4-12-jdk-sid
 
 jobs:
     build:
@@ -19,7 +19,7 @@ jobs:
             - run: |
                 mvn-settings sonatype ${MAVEN_USERNAME} ${MAVEN_PASSWORD}
             - run: |
-                mvn-go-offline -X -e
+                mvn-go-offline
             - save_cache:
                 paths:
                     - ~/.m2
